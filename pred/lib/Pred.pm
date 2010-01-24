@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use base 'Mojolicious';
-use Data::Model::Driver::DBI;
+#use Data::Model::Driver::DBI;
 #use Pred::DB::User;
 #use Pred::DB::Project;
 #use Pred::DB::Story;
@@ -24,12 +24,12 @@ __PACKAGE__->attr(db => sub { Pred::DB->new });
 sub startup {
     my $self = shift;
 
-    my $driver = Data::Model::Driver::DBI->new(
-        dsn => 'dbi:mysql:host=localhost:database=pred',
-        username => 'pred',
-        password => 'password',
-    );
-    $self->db->set_base_driver($driver);
+    #my $driver = Data::Model::Driver::DBI->new(
+    #    dsn => 'dbi:mysql:host=localhost:database=pred',
+    #    username => 'pred',
+    #    password => 'password',
+    #);
+    #$self->db->set_base_driver($driver);
     #$self->user->set_base_driver($driver);
     #$self->project->set_base_driver($driver);
     #$self->story->set_base_driver($driver);

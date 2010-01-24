@@ -4,11 +4,20 @@ use strict;
 use warnings;
 use base 'Data::Model';
 use Data::Model::Schema;
+use Data::Model::Driver::DBI;
+
+my $driver = Data::Model::Driver::DBI->new(
+    dsn => 'dbi:mysql:host=localhost:database=pred',
+    username => 'pred',
+    password => 'password',
+);
+
+base_driver $driver;
 
 install_model users => schema {
     key 'id';
     column id => int => { auto_increment => 1, required => 1, unsigned => 1, };
-    columns qw/name password e_mail admin/;
+    columns qw/name password salt e_mail admin/;
 };
 install_model have_project => schema {
     key [qw/user_id project_id/];
