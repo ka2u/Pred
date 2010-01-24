@@ -1,6 +1,6 @@
 % layout 'loadfoo';
 <h1>Create Accountt</h1>
-<form method="post" action="create">
+<form method="post" action="register">
     <table>
         <tr><td>name : <input type="text" name="name" /></td></tr>
         <tr><td>password: <input type="text" name="password" /></td></tr>
