@@ -1,0 +1,9 @@
+% layout 'loadfoo';
+<h1>Create Project</h1>
+<form method="post" action="add">
+    <table>
+        <tr><td>name: <input type="text" name="name" /></td></tr>
+        <tr><td>description: <input type="text" name="description"></td></tr>
+        <tr><td><input type="submit" value="submit"></td></tr>
+    </table>
+</form>

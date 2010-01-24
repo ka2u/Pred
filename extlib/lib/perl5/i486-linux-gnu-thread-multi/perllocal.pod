@@ -1,0 +1,176 @@
+=head2 Mon Jan 18 17:26:54 2010: C<Module> L<local::lib|local::lib>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/dev/pred-proj/local-lib-1.004009/../extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 1.004009>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Jan 18 17:31:45 2010: C<Module> L<Mojo|Mojo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/dev/pred-proj/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.999915>
+
+=item *
+
+C<EXE_FILES: script/mojo script/mojolicious>
+
+=back
+
+=head2 Mon Jan 18 17:32:12 2010: C<Module> L<MojoX::Session|MojoX::Session>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/dev/pred-proj/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.15>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Mon Jan 18 17:47:38 2010: C<Module> L<Data::Model|Data::Model>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/dev/pred-proj/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.00004>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Tue Jan 19 11:55:14 2010: C<Module> L<Mojo|Mojo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/dev/work/Pred/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.999915>
+
+=item *
+
+C<EXE_FILES: script/mojo script/mojolicious>
+
+=back
+
+=head2 Wed Jan 20 02:12:17 2010: C<Module> L<IO::Stringy|IO::Stringy>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/mywork/dev/work/Pred/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 2.110>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jan 20 02:12:21 2010: C<Module> L<Class::Trigger|Class::Trigger>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/mywork/dev/work/Pred/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.14>
+
+=item *
+
+C<EXE_FILES: >
+
+=back
+
+=head2 Wed Jan 20 23:27:13 2010: C<Module> L<Digest::SHA::PurePerl|Digest::SHA::PurePerl>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/mywork/dev/work/Pred/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 5.48>
+
+=item *
+
+C<EXE_FILES: shasum>
+
+=back
+

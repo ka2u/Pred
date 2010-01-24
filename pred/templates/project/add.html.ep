@@ -1,0 +1,6 @@
+% layout 'loadfoo';
+<h1>Project</h1>
+<table>
+    <tr><td>name: <%== $name %></td></tr>
+    <tr><td>description <%== $description %></td></tr>
+</table>

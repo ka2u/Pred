@@ -1,0 +1,41 @@
+Mon Jan 18 18:09:27 2010 error Mojolicious::Plugin::EplRenderer:53 [17703]: Template "favicon/welcome.ico.ep" missing or not readable.
+Mon Jan 18 18:09:30 2010 error Mojolicious::Plugin::EplRenderer:53 [17703]: Template "favicon/welcome.ico.ep" missing or not readable.
+Mon Jan 18 18:46:33 2010 error Mojolicious::Plugin::EplRenderer:53 [17894]: Template "init/init_project.html.ep" missing or not readable.
+Mon Jan 18 18:46:51 2010 error Mojolicious::Plugin::EplRenderer:53 [17894]: Template "init/input_project.html.ep" missing or not readable.
+Mon Jan 18 18:47:42 2010 error Mojolicious::Plugin::EplRenderer:53 [17896]: Template "init/project.html.ep" missing or not readable.
+Mon Jan 18 18:48:01 2010 error Mojolicious::Plugin::EplRenderer:53 [17896]: Template "init/admin.html.ep" missing or not readable.
+Mon Jan 18 18:48:11 2010 error Mojolicious::Plugin::EplRenderer:53 [17896]: Template "init/story.html.ep" missing or not readable.
+Mon Jan 18 18:49:23 2010 error Mojolicious::Plugin::EplRenderer:53 [17913]: Template "init/user.html.ep" missing or not readable.
+Mon Jan 18 18:49:38 2010 error Mojolicious::Plugin::EplRenderer:53 [17913]: Template "init/project.html.ep" missing or not readable.
+Tue Jan 19 21:54:34 2010 error Mojolicious::Plugin::EplRenderer:53 [11819]: Template "top/favicon.ico.ep" missing or not readable.
+Tue Jan 19 21:54:34 2010 error Mojolicious::Plugin::EplRenderer:53 [11819]: Template "top/favicon.ico.ep" missing or not readable.
+Tue Jan 19 21:54:37 2010 error Mojolicious::Plugin::EplRenderer:53 [11819]: Template "top/favicon.ico.ep" missing or not readable.
+Tue Jan 19 22:00:45 2010 error Mojolicious::Plugin::EplRenderer:53 [11819]: Template "top/favicon.ico.ep" missing or not readable.
+Tue Jan 19 22:28:53 2010 error Mojolicious::Plugin::EplRenderer:53 [11819]: Template "top/favicon.ico.ep" missing or not readable.
+Tue Jan 19 22:58:36 2010 error Mojolicious::Plugin::EplRenderer:53 [11819]: Template "top/favicon.ico.ep" missing or not readable.
+Wed Jan 20 02:12:46 2010 error MojoX::Dispatcher::Routes:145 [4379]: Error around line 6.
+4: use warnings;
+5: 
+6: use base 'Mojolicsiou::Controller';
+7: 
+8: sub input {
+Base class package "Mojolicsiou::Controller" is empty.
+    (Perhaps you need to 'use' the module which defines that package first,
+    or make that module available in @INC (@INC contains: /home/kaz/mywork/dev/work/Pred/pred/script/../../extlib/lib/perl5/i486-linux-gnu-thread-multi /home/kaz/mywork/dev/work/Pred/pred/script/../../extlib/lib/perl5 /home/kaz/mywork/dev/work/Pred/pred/script/../../lib /home/kaz/mywork/dev/work/Pred/pred/script/../lib /home/kaz/mywork/dev/work/Pred/extlib/lib/perl5/i486-linux-gnu-thread-multi /home/kaz/mywork/dev/work/Pred/extlib/lib/perl5 /home/kaz/perl5/lib/perl5/i486-linux-gnu-thread-multi /home/kaz/perl5/lib/perl5 /etc/perl /usr/local/lib/perl/5.10.0 /usr/local/share/perl/5.10.0 /usr/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.10 /usr/share/perl/5.10 /usr/local/lib/site_perl .).
+ at /home/kaz/mywork/dev/work/Pred/pred/script/../lib/Pred/Project.pm line 6
+BEGIN failed--compilation aborted at /home/kaz/mywork/dev/work/Pred/pred/script/../lib/Pred/Project.pm line 6.
+Compilation failed in require at (eval 319) line 3.
+
+Wed Jan 20 02:13:19 2010 error Mojolicious::Plugin::EplRenderer:53 [4490]: Template "project/favicon.ico.ep" missing or not readable.
+Wed Jan 20 02:13:20 2010 error Mojolicious::Plugin::EplRenderer:53 [4490]: Template "project/favicon.ico.ep" missing or not readable.
+Wed Jan 20 02:13:22 2010 error Mojolicious::Plugin::EplRenderer:53 [4490]: Template "project/favicon.ico.ep" missing or not readable.
+Wed Jan 20 02:13:56 2010 error Mojolicious::Plugin::EplRenderer:53 [4490]: Template "project/project.html.ep" missing or not readable.
+Wed Jan 20 02:14:41 2010 error Mojolicious::Plugin::EplRenderer:53 [4732]: Template "project/add.html.ep" missing or not readable.
+Wed Jan 20 02:22:29 2010 error Mojolicious::Plugin::EplRenderer:67 [6459]: Template error in "project/add.html.ep": Error around line 3.
+1: % layout 'loadfoo';
+2: <h1>Project</h1>
+3: name: <%== name %>
+4: description <%== description %>
+Bareword "name" not allowed while "strict subs" in use at template line 3.
+Bareword "description" not allowed while "strict subs" in use at (eval 324) line 4.
+
