@@ -1,4 +1,4 @@
-package Pred::Singup;
+package Pred::Signup;
 
 use strict;
 use warnings;
