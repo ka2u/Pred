@@ -123,59 +123,80 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "Mojo::Asset 3"
-.TH Mojo::Asset 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
+.IX Title "Mojolicious::Book::CodingGuidelines 3"
+.TH Mojolicious::Book::CodingGuidelines 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-Mojo::Asset \- Asset Base Class
-.SH "SYNOPSIS"
-.IX Header "SYNOPSIS"
-.Vb 1
-\&    use base \*(AqMojo::Asset\*(Aq;
-.Ve
-.SH "DESCRIPTION"
-.IX Header "DESCRIPTION"
-Mojo::Asset is an abstract base class for assets.
-.SH "METHODS"
-.IX Header "METHODS"
-Mojo::Asset inherits all methods from Mojo::Base and implements the
-following new ones.
-.ie n .SS """add_chunk"""
-.el .SS "\f(CWadd_chunk\fP"
-.IX Subsection "add_chunk"
-.Vb 1
-\&    $asset = $asset\->add_chunk(\*(Aqfoo bar baz\*(Aq);
-.Ve
-.ie n .SS """contains"""
-.el .SS "\f(CWcontains\fP"
-.IX Subsection "contains"
-.Vb 1
-\&    my $position = $asset\->contains(\*(Aqbar\*(Aq);
-.Ve
-.ie n .SS """get_chunk"""
-.el .SS "\f(CWget_chunk\fP"
-.IX Subsection "get_chunk"
-.Vb 1
-\&    my $chunk = $asset\->get_chunk($offset);
-.Ve
-.ie n .SS """move_to"""
-.el .SS "\f(CWmove_to\fP"
-.IX Subsection "move_to"
-.Vb 1
-\&    $asset = $asset\->move_to(\*(Aq/foo/bar/baz.txt\*(Aq);
-.Ve
-.ie n .SS """size"""
-.el .SS "\f(CWsize\fP"
-.IX Subsection "size"
-.Vb 1
-\&    my $size = $asset\->size;
-.Ve
-.ie n .SS """slurp"""
-.el .SS "\f(CWslurp\fP"
-.IX Subsection "slurp"
-.Vb 1
-\&    my $string = $file\->slurp;
-.Ve
+Mojolicious::Book::CodingGuidelines \- Coding Guidelines
+.SH "OVERVIEW"
+.IX Header "OVERVIEW"
+This document describes the coding guidelines that are the foundations
+of Mojo and Mojolicious development.
+.PP
+Please don't send patches unless you agree with them.
+.SH "MISSION STATEMENT"
+.IX Header "MISSION STATEMENT"
+Mojo is a runtime environment for Perl web frameworks.
+It provides all the basic tools and helpers needed to write simple web
+applications and higher level web frameworks such as Mojolicious and
+Mojolicious::Lite.
+.PP
+All components should be reusable in other projects and in a UNIXish way
+only loosely coupled.
+.PP
+Especially for people new to Perl it should be as easy as possible to
+install Mojo and get started.
+Writing web applications can be one of the most fun ways to learn a language!
+.PP
+For developers of other web frameworks it should be possible to reuse all the
+infrastructure and just consider the higher levels of the Mojo
+distribution an example application.
+.SH "RULES"
+.IX Header "RULES"
+.RS 4
+Keep it simple, no magic unless absolutely necessary.
+.Sp
+Code should be written with a Perl6 port in mind.
+.Sp
+No refactoring unless a very important feature absolutely depends on it.
+.Sp
+It's not a feature without a test.
+.Sp
+A feature is only needed when the majority of the userbase benefits from it.
+.Sp
+Features may not be changed without being deprecated for at least one major
+release.
+.Sp
+Deprecating a feature should be avoided at all costs.
+.Sp
+Only add prereqs if absolutely necessary.
+.Sp
+Domain specific languages should be avoided in favor of Perl'ish solutions.
+.Sp
+No inline \s-1POD\s0.
+.Sp
+Documentation belongs to the book, module \s-1POD\s0 is just an \s-1API\s0 reference.
+.Sp
+Lines should not be longer than 78 characters and we indent with 4
+whitespaces.
+.Sp
+Code should be run through Perl::Tidy with the included \f(CW\*(C`.perltidyrc\*(C'\fR.
+.Sp
+No spaghetti code.
+.Sp
+Code should be organized in blocks and those blocks should be commented.
+.Sp
+Comments should be funny if possible.
+.Sp
+Every file should contain at least one quote from \f(CW\*(C`The Simpsons\*(C'\fR or
+\&\f(CW\*(C`Futurama\*(C'\fR.
+.Sp
+No names outside of the \s-1CREDITS\s0 section of Mojo.pm.
+.Sp
+No Elitism.
+.Sp
+Peace!
+.RE

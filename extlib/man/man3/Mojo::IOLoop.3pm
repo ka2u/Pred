@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo::IOLoop 3"
-.TH Mojo::IOLoop 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo::IOLoop 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -167,7 +167,7 @@ Mojo::IOLoop \- IO Loop
 \&    );
 \&
 \&    # Connect to port 3000 with TLS activated
-\&    my $id = $loop\->connect(host => \*(Aqlocalhost\*(Aq, port => 3000, tls => 1);
+\&    my $id = $loop\->connect(address => \*(Aqlocalhost\*(Aq, port => 3000, tls => 1);
 \&
 \&    # Loop starts writing
 \&    $loop\->writing($id);
@@ -192,15 +192,15 @@ Mojo::IOLoop \- IO Loop
 \&    });
 \&
 \&    # Add a timer
-\&    $loop\->timer(after => 5, cb => sub {
-\&        my $self = shift;
-\&        $self\->drop($id);
-\&    });
+\&    $loop\->timer($id => (after => 5, cb => sub {
+\&        my ($self, $tid, $cid) = @_;
+\&        $self\->drop($cid);
+\&    }));
 \&
 \&    # Add another timer
-\&    $loop\->timer(interval => 3, cb => sub {
+\&    $loop\->timer($id => (interval => 3, cb => sub {
 \&        print "Timer is running again!\en";
-\&    });
+\&    }));
 \&
 \&    # Start and stop loop
 \&    $loop\->start;
@@ -331,7 +331,7 @@ dropped.
 \&    $loop = $loop\->drop($id);
 .Ve
 .PP
-Drop a connection or timer immediately.
+Drop a connection, listen socket or timer immediately.
 .ie n .SS """error_cb"""
 .el .SS "\f(CWerror_cb\fP"
 .IX Subsection "error_cb"
@@ -349,6 +349,14 @@ Callback to be invoked if an error event happens on the connection.
 .PP
 Drop a connection gracefully by allowing it to finish writing all data in
 it's write buffer.
+.ie n .SS """generate_port"""
+.el .SS "\f(CWgenerate_port\fP"
+.IX Subsection "generate_port"
+.Vb 1
+\&    my $port = $loop\->generate_port;
+.Ve
+.PP
+Find a free \s-1TCP\s0 port.
 .ie n .SS """hup_cb"""
 .el .SS "\f(CWhup_cb\fP"
 .IX Subsection "hup_cb"
@@ -361,10 +369,10 @@ Callback to be invoked if the connection gets closed.
 .el .SS "\f(CWlisten\fP"
 .IX Subsection "listen"
 .Vb 9
-\&    $loop\->listen(port => 3000);
-\&    $loop\->listen({port => 3000});
-\&    $loop\->listen(file => \*(Aq/foo/myapp.sock\*(Aq);
-\&    $loop\->listen(
+\&    my $id = $loop\->listen(port => 3000);
+\&    my $id = $loop\->listen({port => 3000});
+\&    my $id = $loop\->listen(file => \*(Aq/foo/myapp.sock\*(Aq);
+\&    my $id = $loop\->listen(
 \&        port     => 443,
 \&        tls      => 1,
 \&        tls_cert => \*(Aq/foo/server.cert\*(Aq,
@@ -444,8 +452,8 @@ Stop the loop immediately.
 .el .SS "\f(CWtimer\fP"
 .IX Subsection "timer"
 .Vb 2
-\&    my $id = $loop\->timer(after => 5, cb => sub {...});
-\&    my $id = $loop\->timer({interval => 5, cb => sub {...}});
+\&    my $id = $loop\->timer($id => (after => 5, cb => sub {...}));
+\&    my $id = $loop\->timer($id => {interval => 5, cb => sub {...}}));
 .Ve
 .PP
 Create a new timer, invoking the callback afer a given amount of seconds.

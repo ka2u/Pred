@@ -59,6 +59,24 @@ sub add_condition {
 
 sub bridge { shift->route(@_)->inline(1) }
 
+sub find_route {
+    my ($self, $name) = @_;
+
+    # Find endpoint
+    my @children = ($self);
+    while (my $child = shift @children) {
+
+        # Match
+        return $child if ($child->name || '') eq $name;
+
+        # Append
+        push @children, @{$child->children};
+    }
+
+    # Not found
+    return;
+}
+
 sub is_endpoint {
     my $self = shift;
     return   if $self->inline;
@@ -127,15 +145,13 @@ sub match {
       if $self->pattern->format;
 
     # Update stack
-    if ($self->inline || ($self->is_endpoint && $match->is_path_empty)) {
-        push @{$match->stack}, $captures;
-    }
+    push @{$match->stack}, $captures
+      if $self->inline || ($self->is_endpoint && $match->is_path_empty);
 
     # Waypoint match
     if ($self->block && $match->is_path_empty) {
-        push @{$match->stack}, $captures;
         $match->endpoint($self);
-        return $self;
+        return $match;
     }
 
     # Match children
@@ -212,7 +228,7 @@ sub to {
     return $self unless @_;
 
     # Single argument
-    my ($defaults, $shortcut);
+    my ($shortcut, $defaults);
     if (@_ == 1) {
 
         # Hash
@@ -244,13 +260,13 @@ sub to {
     }
 
     # Controller and action
-    if ($shortcut && $shortcut =~ /^(\w+)\#(\w+)$/) {
+    if ($shortcut && $shortcut =~ /^([\w\-]+)\#(\w+)$/) {
         $defaults->{controller} = $1;
         $defaults->{action}     = $2;
     }
 
     # Defaults
-    $self->pattern->defaults($defaults);
+    $self->pattern->defaults($defaults) if $defaults;
 
     return $self;
 }
@@ -382,14 +398,9 @@ follwing the ones.
     my $bridge = $routes->bridge;
     my $bridge = $routes->bridge('/:controller/:action');
 
-=head2 C<to>
+=head2 C<find_route>
 
-    my $to  = $routes->to;
-    $routes = $routes->to(action => 'foo');
-    $routes = $routes->to({action => 'foo'});
-    $routes = $routes->to('controller#action');
-    $routes = $routes->to('controller#action', foo => 'bar');
-    $routes = $routes->to('controller#action', {foo => 'bar'});
+    my $route = $routes->find_route('some_route');
 
 =head2 C<is_endpoint>
 
@@ -413,6 +424,15 @@ follwing the ones.
 =head2 C<route>
 
     my $route = $routes->route('/:c/:a', a => qr/\w+/);
+
+=head2 C<to>
+
+    my $to  = $routes->to;
+    $routes = $routes->to(action => 'foo');
+    $routes = $routes->to({action => 'foo'});
+    $routes = $routes->to('controller#action');
+    $routes = $routes->to('controller#action', foo => 'bar');
+    $routes = $routes->to('controller#action', {foo => 'bar'});
 
 =head2 C<to_string>
 

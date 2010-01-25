@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojolicious 3"
-.TH Mojolicious 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojolicious 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -171,14 +171,14 @@ Mojo will name the log file after the current mode and modes other than
 \&\f(CW\*(C`development\*(C'\fR will result in limited log output.
 .PP
 If you want to add per mode logic to your application, you can add a sub
-to your application named \f(CW\*(C`mode_$mode\*(C'\fR.
+to your application named \f(CW$mode_mode\fR.
 .PP
 .Vb 3
-\&    sub mode_development {
+\&    sub development_mode {
 \&        my $self = shift;
 \&    }
 \&
-\&    sub mode_production {
+\&    sub production_mode {
 \&        my $self = shift;
 \&    }
 .Ve

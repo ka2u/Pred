@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo::Transaction::Single 3"
-.TH Mojo::Transaction::Single 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo::Transaction::Single 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -191,6 +191,13 @@ Mojo::Transaction and implements the following new ones.
 .Vb 2
 \&    my $res = $tx\->res;
 \&    $tx     = $tx\->res(Mojo::Message::Response\->new);
+.Ve
+.ie n .SS """upgrade_cb"""
+.el .SS "\f(CWupgrade_cb\fP"
+.IX Subsection "upgrade_cb"
+.Vb 2
+\&    my $cb = $tx\->upgrade_cb;
+\&    $tx    = $tx\->upgrade_cb(sub {...});
 .Ve
 .SH "METHODS"
 .IX Header "METHODS"

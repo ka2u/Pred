@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo 3"
-.TH Mojo 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -221,6 +221,17 @@ which stringifies to the actual path.
 .Ve
 .PP
 The logging layer of your application, by default a Mojo::Log object.
+.ie n .SS """websocket_handshake_cb"""
+.el .SS "\f(CWwebsocket_handshake_cb\fP"
+.IX Subsection "websocket_handshake_cb"
+.Vb 2
+\&    my $cb = $mojo\->websocket_handshake_cb;
+\&    $mojo  = $mojo\->websocket_handshake_cb(sub { ... });
+.Ve
+.PP
+The websocket handshake callback, by default it builds a
+Mojo::Transaction::WebSocket object and handles the response for the
+handshake request.
 .SH "METHODS"
 .IX Header "METHODS"
 Mojo inherits all methods from Mojo::Base and implements the following
@@ -365,6 +376,8 @@ Randal Schwartz
 .PP
 Robert Hicks
 .PP
+Sergey Zasenko
+.PP
 Shu Cho
 .PP
 Stanis Trendelenburg
@@ -373,7 +386,9 @@ Tatsuhiko Miyagawa
 .PP
 Uwe Voelker
 .PP
-Viacheslav Tikhanovskii
+Viacheslav Tykhanovskyi
+.PP
+Yaroslav Korshak
 .PP
 Yuki Kimoto
 .SH "COPYRIGHT AND LICENSE"

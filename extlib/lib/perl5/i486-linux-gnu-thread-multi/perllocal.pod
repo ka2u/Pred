@@ -174,3 +174,25 @@ C<EXE_FILES: shasum>
 
 =back
 
+=head2 Mon Jan 25 10:38:58 2010: C<Module> L<Mojo|Mojo>
+
+=over 4
+
+=item *
+
+C<installed into: /home/kaz/dev/work/Pred/extlib/lib/perl5>
+
+=item *
+
+C<LINKTYPE: dynamic>
+
+=item *
+
+C<VERSION: 0.999915>
+
+=item *
+
+C<EXE_FILES: script/mojo script/mojolicious>
+
+=back
+

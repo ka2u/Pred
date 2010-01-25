@@ -123,59 +123,102 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "Mojo::Asset 3"
-.TH Mojo::Asset 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
+.IX Title "Mojo::Transaction::WebSocket 3"
+.TH Mojo::Transaction::WebSocket 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-Mojo::Asset \- Asset Base Class
+Mojo::Transaction::WebSocket \- WebSocket Transaction Container
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 .Vb 1
-\&    use base \*(AqMojo::Asset\*(Aq;
+\&    use Mojo::Transaction::WebSocket;
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Mojo::Asset is an abstract base class for assets.
+Mojo::Transaction::WebSocket is a container for WebSocket transactions.
+.SH "ATTRIBUTES"
+.IX Header "ATTRIBUTES"
+Mojo::Transaction::WebSocket inherits all attributes from
+Mojo::Transaction and implements the following new ones.
+.ie n .SS """read_buffer"""
+.el .SS "\f(CWread_buffer\fP"
+.IX Subsection "read_buffer"
+.Vb 2
+\&    my $buffer = $ws\->read_buffer;
+\&    $ws        = $ws\->read_buffer(Mojo::Buffer\->new);
+.Ve
+.PP
+Buffer for incoming data.
+.ie n .SS """receive_message"""
+.el .SS "\f(CWreceive_message\fP"
+.IX Subsection "receive_message"
+.Vb 2
+\&    my $cb = $ws\->receive_message;
+\&    $ws    = $ws\->receive_message(sub {...});
+.Ve
+.PP
+The callback that receives decoded messages one by one.
+.PP
+.Vb 3
+\&    $ws\->receive_message(sub {
+\&        my ($self, $message) = @_;
+\&    });
+.Ve
+.ie n .SS """req"""
+.el .SS "\f(CWreq\fP"
+.IX Subsection "req"
+.Vb 2
+\&    my $req = $ws\->req;
+\&    $ws     = $ws\->req(Mojo::Message::Request\->new);
+.Ve
+.PP
+The original handshake request.
+.ie n .SS """write_buffer"""
+.el .SS "\f(CWwrite_buffer\fP"
+.IX Subsection "write_buffer"
+.Vb 2
+\&    my $buffer = $ws\->write_buffer;
+\&    $ws        = $ws\->write_buffer(Mojo::Buffer\->new);
+.Ve
+.PP
+Buffer for outgoing data.
 .SH "METHODS"
 .IX Header "METHODS"
-Mojo::Asset inherits all methods from Mojo::Base and implements the
-following new ones.
-.ie n .SS """add_chunk"""
-.el .SS "\f(CWadd_chunk\fP"
-.IX Subsection "add_chunk"
+Mojo::Transaction::WebSocket inherits all methods from
+Mojo::Transaction and implements the following new ones.
+.ie n .SS """finish"""
+.el .SS "\f(CWfinish\fP"
+.IX Subsection "finish"
 .Vb 1
-\&    $asset = $asset\->add_chunk(\*(Aqfoo bar baz\*(Aq);
+\&    $ws\->finish;
 .Ve
-.ie n .SS """contains"""
-.el .SS "\f(CWcontains\fP"
-.IX Subsection "contains"
+.PP
+Finish the WebSocket connection gracefully.
+.ie n .SS """send_message"""
+.el .SS "\f(CWsend_message\fP"
+.IX Subsection "send_message"
 .Vb 1
-\&    my $position = $asset\->contains(\*(Aqbar\*(Aq);
+\&    $ws\->send_message(\*(AqHi there!\*(Aq);
 .Ve
-.ie n .SS """get_chunk"""
-.el .SS "\f(CWget_chunk\fP"
-.IX Subsection "get_chunk"
+.PP
+Send a message over the WebSocket, encoding and framing will be handled
+transparently.
+.ie n .SS """server_get_chunk"""
+.el .SS "\f(CWserver_get_chunk\fP"
+.IX Subsection "server_get_chunk"
 .Vb 1
-\&    my $chunk = $asset\->get_chunk($offset);
+\&    my $chunk = $ws\->server_get_chunk;
 .Ve
-.ie n .SS """move_to"""
-.el .SS "\f(CWmove_to\fP"
-.IX Subsection "move_to"
+.PP
+Raw WebSocket data to write, only used by servers.
+.ie n .SS """server_read"""
+.el .SS "\f(CWserver_read\fP"
+.IX Subsection "server_read"
 .Vb 1
-\&    $asset = $asset\->move_to(\*(Aq/foo/bar/baz.txt\*(Aq);
+\&    $ws\->server_read($data);
 .Ve
-.ie n .SS """size"""
-.el .SS "\f(CWsize\fP"
-.IX Subsection "size"
-.Vb 1
-\&    my $size = $asset\->size;
-.Ve
-.ie n .SS """slurp"""
-.el .SS "\f(CWslurp\fP"
-.IX Subsection "slurp"
-.Vb 1
-\&    my $string = $file\->slurp;
-.Ve
+.PP
+Read raw WebSocket data, only used by servers.

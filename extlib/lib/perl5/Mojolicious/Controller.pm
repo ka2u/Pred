@@ -10,9 +10,24 @@ use base 'MojoX::Dispatcher::Routes::Controller';
 use Mojo::ByteStream;
 use Mojo::URL;
 
+require Carp;
+
 # Space: It seems to go on and on forever...
 # but then you get to the end and a gorilla starts throwing barrels at you.
 sub client { shift->app->client }
+
+sub finish {
+    my $self = shift;
+
+    # Resume
+    $self->resume;
+
+    # Render
+    $self->app->routes->render($self);
+
+    # Hook
+    $self->app->plugins->run_hook_reverse(after_dispatch => $self);
+}
 
 sub helper {
     my $self = shift;
@@ -21,10 +36,11 @@ sub helper {
     return unless my $name = shift;
 
     # Helper
-    return unless my $helper = $self->app->renderer->helper->{$name};
+    Carp::croak(qq/Helper "$name" not found./)
+      unless my $helper = $self->app->renderer->helper->{$name};
 
     # Run
-    return $self->$helper(@_);
+    return wantarray ? ($self->$helper(@_)) : scalar $self->$helper(@_);
 }
 
 sub pause { shift->tx->pause }
@@ -194,7 +210,10 @@ Mojolicious::Controller - Controller Base Class
 
 =head1 DESCRIPTION
 
-L<Mojolicous::Controller> is a controller base class.
+L<Mojolicous::Controller> is the base class for your L<Mojolicious>
+controllers.
+It is also the default controller class for L<Mojolicious> unless you set
+C<controller_class> in your application.
 
 =head1 ATTRIBUTES
 
@@ -210,15 +229,35 @@ ones.
 =head2 C<client>
 
     my $client = $c->client;
+    
+A L<Mojo::Client> prepared for the current environment.
+
+=head2 C<finish>
+
+    $c->finish;
+
+Similar to C<resume> but will also trigger automatic rendering and the
+C<after_dispatch> plugin hook, which would normally get disabled once a
+request gets paused.
 
 =head2 C<helper>
 
     $c->helper('foo');
     $c->helper(foo => 23);
 
+Directly call a L<Mojolicious> helper, see
+L<Mojolicious::Plugin::DefaultHelpers> for a list of helpers that are always
+available.
+
 =head2 C<pause>
 
     $c->pause;
+
+Pause transaction associated with this request, used for asynchronous web
+applications.
+Note that automatic rendering and some plugins that do state changing
+operations inside the C<after_dispatch> hook won't work if you pause a
+transaction.
 
 =head2 C<redirect_to>
 
@@ -226,6 +265,8 @@ ones.
     $c = $c->redirect_to('named', foo => 'bar');
     $c = $c->redirect_to('/path');
     $c = $c->redirect_to('http://127.0.0.1/foo/bar');
+
+Prepare a redirect response.
 
 =head2 C<render>
 
@@ -241,9 +282,21 @@ ones.
     $c->render('foo/bar', format => 'html');
     $c->render('foo/bar', {format => 'html'});
 
+This is a wrapper around L<MojoX::Renderer> exposing pretty much all
+functionality provided by it.
+It will set a default template to use based on the controller and action name
+or fall back to the route name.
+You can call it with a hash of options which can be preceded by an optional
+template name.
+
 =head2 C<render_exception>
 
     $c->render_exception($e);
+
+Render the exception template C<exception.html.$handler>.
+Will set the status code to C<500> meaning C<Internal Server Error>.
+Takes a L<Mojo::Exception> object and will fall back to a rendering a static
+C<500> page using L<MojoX::Renderer::Static>.
 
 =head2 C<render_inner>
 
@@ -251,37 +304,57 @@ ones.
     my $output = $c->render_inner('content');
     my $output = $c->render_inner(content => 'Hello world!');
 
+Contains partial rendered templates, used for the renderers C<layout> and
+C<extends> features.
+
 =head2 C<render_json>
 
     $c->render_json({foo => 'bar'});
     $c->render_json([1, 2, -3]);
 
+Render a data structure as JSON.
+
 =head2 C<render_not_found>
 
     $c->render_not_found;
+    
+Render the not found template C<not_found.html.$handler>.
+Also sets the response status code to C<404>, will fall back to a rendering a
+static C<404> page using L<MojoX::Renderer::Static>.
 
 =head2 C<render_partial>
 
     my $output = $c->render_partial;
     my $output = $c->render_partial(action => 'foo');
+    
+Same as C<render> but returns the rendered result.
 
 =head2 C<render_static>
 
     $c->render_static('images/logo.png');
+
+Render a static asset using L<MojoX::Dispatcher::Static>.
 
 =head2 C<render_text>
 
     $c->render_text('Hello World!');
     $c->render_text('Hello World', layout => 'green');
 
+Render the givent content as plain text.
+
 =head2 C<resume>
 
     $c->resume;
+
+Resume transaction associated with this request, used for asynchronous web
+applications.
 
 =head2 C<url_for>
 
     my $url = $c->url_for;
     my $url = $c->url_for(controller => 'bar', action => 'baz');
     my $url = $c->url_for('named', controller => 'bar', action => 'baz');
+
+Generate a L<Mojo::URL> for the current or a named route.
 
 =cut

@@ -103,6 +103,15 @@ Mojolicious::Plugin::EpRenderer - EP Renderer Plugin
 
 L<Mojolicous::Plugin::EpRenderer> is a renderer for C<ep> templates.
 
+=head1 TEMPLATES
+
+C<ep> or C<Embedded Perl> is a simple template format where you embed perl
+code into documents.
+It is based on L<Mojo::Template>, but extends it with some convenient syntax
+sugar designed specifically for L<Mojolicious>.
+It supports L<Mojolicious> template helpers and exposes the stash directly as
+perl variables.
+
 =head1 METHODS
 
 L<Mojolicious::Plugin::EpRenderer> inherits all methods from
@@ -111,5 +120,7 @@ L<Mojolicious::Plugin> and implements the following new ones.
 =head2 C<register>
 
     $plugin->register;
+
+Register the renderer.
 
 =cut

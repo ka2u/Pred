@@ -241,7 +241,7 @@ __END__
 
 =head1 NAME
 
-MojoX::Renderer - Renderer
+MojoX::Renderer - MIME Type Based Renderer
 
 =head1 SYNOPSIS
 
@@ -251,7 +251,8 @@ MojoX::Renderer - Renderer
 
 =head1 DESCRIPTION
 
-L<MojoX::Renderer> is a MIME type based renderer.
+L<MojoX::Renderer> is the standard L<Mojolicious> renderer.
+It turns your stashed data structures into content.
 
 =head2 ATTRIBUTES
 
@@ -262,93 +263,150 @@ L<MojoX::Types> implements the follwing attributes.
     my $default = $renderer->default_format;
     $renderer   = $renderer->default_format('html');
 
+The default format to render if C<format> is not set in the stash.
+The renderer will use L<MojoX::Types> to look up the content MIME type.
+
 =head2 C<default_handler>
 
     my $default = $renderer->default_handler;
     $renderer   = $renderer->default_handler('epl');
+
+The default template handler to use for rendering.
+There are two handlers in this distribution.
+
+=over 4
+
+=item epl
+
+C<Embedded Perl Lite> handled by L<Mojolicious::Plugin::EplRenderer>.
+
+=item ep
+
+C<Embedded Perl> handled by L<Mojolicious::Plugin::EpRenderer>.
+
+=back
 
 =head2 C<default_status>
 
     my $default = $renderer->default_status;
     $renderer   = $renderer->default_status(404);
 
+The default status to set when rendering content, defaults to C<200>.
+
 =head2 C<default_template_class>
 
     my $default = $renderer->default_template_class;
     $renderer   = $renderer->default_template_class('main');
+
+The renderer will use this class to look for templates in the C<__DATA__>
+section.
 
 =head2 C<encoding>
 
     my $encoding = $renderer->encoding;
     $renderer    = $renderer->encoding('koi8-r');
 
+Will encode the content if set.
+
 =head2 C<handler>
 
     my $handler = $renderer->handler;
     $renderer   = $renderer->handler({epl => sub { ... }});
+
+Registered handlers.
 
 =head2 C<helper>
 
     my $helper = $renderer->helper;
     $renderer  = $renderer->helper({url_for => sub { ... }});
 
+Registered helpers.
+
 =head2 C<layout_prefix>
 
     my $prefix = $renderer->layout_prefix;
     $renderer  = $renderer->layout_prefix('layouts');
 
+Directory to look for layouts in, defaults to C<layouts>.
+
 =head2 C<root>
 
    my $root  = $renderer->root;
    $renderer = $renderer->root('/foo/bar/templates');
+   
+Directory to look for templates in.
 
 =head2 C<types>
 
     my $types = $renderer->types;
     $renderer = $renderer->types(MojoX::Types->new);
 
+L<MojoX::Types> object to use for looking up MIME types.
+
 =head1 METHODS
 
-L<MojoX::Types> inherits all methods from L<Mojo::Base> and implements the
+L<MojoX::Renderer> inherits all methods from L<Mojo::Base> and implements the
 follwing the ones.
 
 =head2 C<new>
 
     my $renderer = MojoX::Renderer->new;
 
+Construct a new renderer.
+
 =head2 C<add_handler>
 
     $renderer = $renderer->add_handler(epl => sub { ... });
+    
+Add a new handler to the renderer.
+See L<Mojolicious::Plugin::EpRenderer> for a sample renderer.
 
 =head2 C<add_helper>
 
     $renderer = $renderer->add_helper(url_for => sub { ... });
 
+Add a new helper to the renderer.
+See L<Mojolicious::Plugin::EpRenderer> for sample helpers.
+
 =head2 C<get_inline_template>
 
     my $template = $renderer->get_inline_template($c, 'foo.html.ep');
 
+Get an inline template by name, usually used by handlers.
+
 =head2 C<render>
 
-    my $success  = $renderer->render($c);
+    my $success = $renderer->render($c);
 
     $c->stash->{partial} = 1;
     my $output = $renderer->render($c);
 
+Render output through one of the Mojo renderers.
+This renderer requires some configuration, at the very least you will need to
+have a default C<format> and a default C<handler> as well as a C<template> or
+C<text>/C<json>.
+See L<Mojolicious::Controller> for a more user friendly interface.
+
 =head2 C<template_name>
 
-    my $template = $renderer->template_path({
+    my $template = $renderer->template_name({
         template => 'foo/bar',
         format   => 'html',
         handler  => 'epl'
     });
+    
+Builds a template name based on an options hash with C<template>, C<format>
+and C<handler>.
 
 =head2 C<template_path>
 
-    my $path = $renderer->template_name({
+    my $path = $renderer->template_path({
         template => 'foo/bar',
         format   => 'html',
         handler  => 'epl'
     });
+
+Builds a full template path based on an options hash with C<template>,
+C<format> and C<handler>.
 
 =cut

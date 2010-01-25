@@ -16,6 +16,18 @@ __PACKAGE__->attr(url => sub { Mojo::URL->new });
 
 __PACKAGE__->attr('_params');
 
+# Start line regex
+my $START_LINE_RE = qr/
+    ^\s*                                                         # Start
+    ([a-zA-Z]+)                                                  # Method
+    \s+                                                          # Whitespace
+    (
+    [0-9a-zA-Z\-\.\_\~\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=\%]+   # Path
+    )
+    (?:\s+HTTP\/(\d+)\.(\d+))?                                   # Version
+    $                                                            # End
+/x;
+
 sub cookies {
     my $self = shift;
 
@@ -197,8 +209,6 @@ sub _parse_env {
                     $port = $2;
                 }
 
-                $self->url->host($host);
-                $self->url->port($port);
                 $self->url->base->host($host);
                 $self->url->base->port($port);
             }
@@ -318,16 +328,7 @@ sub _parse_start_line {
 
     # We have a (hopefully) full request line
     if (defined $line) {
-        if ($line =~ /
-            ^\s*                                                          # Start
-            ([a-zA-Z]+)                                                   # Method
-            \s+                                                           # Whitespace
-            ([0-9a-zA-Z\-\.\_\~\:\/\?\#\[\]\@\!\$\&\'\(\)\*\+\,\;\=\%]+)  # Path
-            (?:\s+HTTP\/(\d+)\.(\d+))?                                    # Version (optional)
-            $                                                             # End
-        /x
-          )
-        {
+        if ($line =~ /$START_LINE_RE/) {
             $self->method($1);
             $self->url->parse($2);
 

@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojolicious::Plugins 3"
-.TH Mojolicious::Plugins 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojolicious::Plugins 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -138,7 +138,10 @@ Mojolicious::Plugins \- Plugins
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Mojolicous::Plugins is a container for Mojolicious plugins.
+Mojolicous::Plugins is the plugin manager of Mojolicious.
+In your application you will usually use it to load plugins.
+To implement your own plugins see Mojolicious::Plugin and the \f(CW\*(C`add_hook\*(C'\fR
+method below.
 .SS "\s-1ATTRIBUTES\s0"
 .IX Subsection "ATTRIBUTES"
 Mojolicious::Plugins implements the following attributes.
@@ -149,6 +152,9 @@ Mojolicious::Plugins implements the following attributes.
 \&    my $hooks = $plugins\->hooks;
 \&    $plugins  = $plugins\->hooks({foo => [sub {...}]});
 .Ve
+.PP
+Hash reference containing all hooks that have been registered by loaded
+plugins.
 .ie n .SS """namespaces"""
 .el .SS "\f(CWnamespaces\fP"
 .IX Subsection "namespaces"
@@ -156,6 +162,9 @@ Mojolicious::Plugins implements the following attributes.
 \&    my $namespaces = $plugins\->namespaces;
 \&    $plugins       = $plugins\->namespaces([\*(AqMojolicious::Plugin\*(Aq]);
 .Ve
+.PP
+Namespaces to load plugins from.
+You can add more namespaces to load application specific plugins.
 .SH "METHODS"
 .IX Header "METHODS"
 Mojolicious::Plugins inherits all methods from Mojo::Base and
@@ -164,8 +173,57 @@ implements the following new ones.
 .el .SS "\f(CWadd_hook\fP"
 .IX Subsection "add_hook"
 .Vb 1
-\&    $plugins = $plugins\->add_hook(foo => sub {...});
+\&    $plugins = $plugins\->add_hook(event => sub {...});
 .Ve
+.PP
+Hook into an event.
+The following events are available.
+(Note that \f(CW\*(C`after_*\*(C'\fR hooks run in reverse order)
+.IP "before_dispatch" 4
+.IX Item "before_dispatch"
+Runs before the dispatchers determines what action to run.
+(Passed the default controller instance)
+.Sp
+.Vb 3
+\&    $plugins\->add_hook(before_dispatch => sub {
+\&        my ($self, $c) = @_;
+\&    });
+.Ve
+.IP "after_dispatch" 4
+.IX Item "after_dispatch"
+Runs after the dispatchers determines what action to run.
+(Passed the default controller instance)
+.Sp
+.Vb 3
+\&    $plugins\->add_hook(after_dispatch => sub {
+\&        my ($self, $c) = @_;
+\&    });
+.Ve
+.IP "after_static_dispatch" 4
+.IX Item "after_static_dispatch"
+Runs after the static dispatcher determines if a static file should be
+served. (Passed the default controller instance)
+.Sp
+.Vb 3
+\&    $plugins\->add_hook(after_static_dispatch => sub {
+\&        my ($self, $c) = @_;
+\&    })
+.Ve
+.IP "after_build_tx" 4
+.IX Item "after_build_tx"
+Runs right after the transaction is built and before the \s-1HTTP\s0 message gets
+parsed.
+One usage case would be upload progress bars.
+(Passed the transaction instance)
+.Sp
+.Vb 3
+\&    $plugins\->add_hook(after_build_tx => sub {
+\&        my ($self, $tx) = @_;
+\&    })
+.Ve
+.PP
+You could also add custom events by using \f(CW\*(C`run_hook\*(C'\fR and \f(CW\*(C`run_hook_reverse\*(C'\fR
+in your application.
 .ie n .SS """load_plugin"""
 .el .SS "\f(CWload_plugin\fP"
 .IX Subsection "load_plugin"
@@ -174,6 +232,9 @@ implements the following new ones.
 \&    $plugins = $plugins\->load_plugin($app, \*(Aqsomething\*(Aq, foo => 23);
 \&    $plugins = $plugins\->load_plugin($app, \*(Aqsomething\*(Aq, {foo => 23});
 .Ve
+.PP
+Load a plugin from the configured namespaces and run \f(CW\*(C`register\*(C'\fR.
+Optional arguments are passed to register.
 .ie n .SS """run_hook"""
 .el .SS "\f(CWrun_hook\fP"
 .IX Subsection "run_hook"
@@ -181,6 +242,8 @@ implements the following new ones.
 \&    $plugins = $plugins\->run_hook(\*(Aqfoo\*(Aq);
 \&    $plugins = $plugins\->run_hook(foo => 123);
 .Ve
+.PP
+Runs a hook.
 .ie n .SS """run_hook_reverse"""
 .el .SS "\f(CWrun_hook_reverse\fP"
 .IX Subsection "run_hook_reverse"
@@ -188,3 +251,5 @@ implements the following new ones.
 \&    $plugins = $plugins\->run_hook_reverse(\*(Aqfoo\*(Aq);
 \&    $plugins = $plugins\->run_hook_reverse(foo => 123);
 .Ve
+.PP
+Runs a hook in reverse order.

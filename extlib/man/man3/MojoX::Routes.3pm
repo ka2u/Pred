@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MojoX::Routes 3"
-.TH MojoX::Routes 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH MojoX::Routes 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -224,16 +224,11 @@ follwing the ones.
 \&    my $bridge = $routes\->bridge;
 \&    my $bridge = $routes\->bridge(\*(Aq/:controller/:action\*(Aq);
 .Ve
-.ie n .SS """to"""
-.el .SS "\f(CWto\fP"
-.IX Subsection "to"
-.Vb 6
-\&    my $to  = $routes\->to;
-\&    $routes = $routes\->to(action => \*(Aqfoo\*(Aq);
-\&    $routes = $routes\->to({action => \*(Aqfoo\*(Aq});
-\&    $routes = $routes\->to(\*(Aqcontroller#action\*(Aq);
-\&    $routes = $routes\->to(\*(Aqcontroller#action\*(Aq, foo => \*(Aqbar\*(Aq);
-\&    $routes = $routes\->to(\*(Aqcontroller#action\*(Aq, {foo => \*(Aqbar\*(Aq});
+.ie n .SS """find_route"""
+.el .SS "\f(CWfind_route\fP"
+.IX Subsection "find_route"
+.Vb 1
+\&    my $route = $routes\->find_route(\*(Aqsome_route\*(Aq);
 .Ve
 .ie n .SS """is_endpoint"""
 .el .SS "\f(CWis_endpoint\fP"
@@ -267,6 +262,17 @@ follwing the ones.
 .IX Subsection "route"
 .Vb 1
 \&    my $route = $routes\->route(\*(Aq/:c/:a\*(Aq, a => qr/\ew+/);
+.Ve
+.ie n .SS """to"""
+.el .SS "\f(CWto\fP"
+.IX Subsection "to"
+.Vb 6
+\&    my $to  = $routes\->to;
+\&    $routes = $routes\->to(action => \*(Aqfoo\*(Aq);
+\&    $routes = $routes\->to({action => \*(Aqfoo\*(Aq});
+\&    $routes = $routes\->to(\*(Aqcontroller#action\*(Aq);
+\&    $routes = $routes\->to(\*(Aqcontroller#action\*(Aq, foo => \*(Aqbar\*(Aq);
+\&    $routes = $routes\->to(\*(Aqcontroller#action\*(Aq, {foo => \*(Aqbar\*(Aq});
 .Ve
 .ie n .SS """to_string"""
 .el .SS "\f(CWto_string\fP"

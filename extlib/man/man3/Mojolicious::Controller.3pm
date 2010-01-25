@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojolicious::Controller 3"
-.TH Mojolicious::Controller 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojolicious::Controller 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -138,7 +138,10 @@ Mojolicious::Controller \- Controller Base Class
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Mojolicous::Controller is a controller base class.
+Mojolicous::Controller is the base class for your Mojolicious
+controllers.
+It is also the default controller class for Mojolicious unless you set
+\&\f(CW\*(C`controller_class\*(C'\fR in your application.
 .SH "ATTRIBUTES"
 .IX Header "ATTRIBUTES"
 Mojolicious::Controller inherits all attributes from
@@ -154,6 +157,18 @@ ones.
 .Vb 1
 \&    my $client = $c\->client;
 .Ve
+.PP
+A Mojo::Client prepared for the current environment.
+.ie n .SS """finish"""
+.el .SS "\f(CWfinish\fP"
+.IX Subsection "finish"
+.Vb 1
+\&    $c\->finish;
+.Ve
+.PP
+Similar to \f(CW\*(C`resume\*(C'\fR but will also trigger automatic rendering and the
+\&\f(CW\*(C`after_dispatch\*(C'\fR plugin hook, which would normally get disabled once a
+request gets paused.
 .ie n .SS """helper"""
 .el .SS "\f(CWhelper\fP"
 .IX Subsection "helper"
@@ -161,12 +176,22 @@ ones.
 \&    $c\->helper(\*(Aqfoo\*(Aq);
 \&    $c\->helper(foo => 23);
 .Ve
+.PP
+Directly call a Mojolicious helper, see
+Mojolicious::Plugin::DefaultHelpers for a list of helpers that are always
+available.
 .ie n .SS """pause"""
 .el .SS "\f(CWpause\fP"
 .IX Subsection "pause"
 .Vb 1
 \&    $c\->pause;
 .Ve
+.PP
+Pause transaction associated with this request, used for asynchronous web
+applications.
+Note that automatic rendering and some plugins that do state changing
+operations inside the \f(CW\*(C`after_dispatch\*(C'\fR hook won't work if you pause a
+transaction.
 .ie n .SS """redirect_to"""
 .el .SS "\f(CWredirect_to\fP"
 .IX Subsection "redirect_to"
@@ -176,6 +201,8 @@ ones.
 \&    $c = $c\->redirect_to(\*(Aq/path\*(Aq);
 \&    $c = $c\->redirect_to(\*(Aqhttp://127.0.0.1/foo/bar\*(Aq);
 .Ve
+.PP
+Prepare a redirect response.
 .ie n .SS """render"""
 .el .SS "\f(CWrender\fP"
 .IX Subsection "render"
@@ -192,12 +219,24 @@ ones.
 \&    $c\->render(\*(Aqfoo/bar\*(Aq, format => \*(Aqhtml\*(Aq);
 \&    $c\->render(\*(Aqfoo/bar\*(Aq, {format => \*(Aqhtml\*(Aq});
 .Ve
+.PP
+This is a wrapper around MojoX::Renderer exposing pretty much all
+functionality provided by it.
+It will set a default template to use based on the controller and action name
+or fall back to the route name.
+You can call it with a hash of options which can be preceded by an optional
+template name.
 .ie n .SS """render_exception"""
 .el .SS "\f(CWrender_exception\fP"
 .IX Subsection "render_exception"
 .Vb 1
 \&    $c\->render_exception($e);
 .Ve
+.PP
+Render the exception template \f(CW\*(C`exception.html.$handler\*(C'\fR.
+Will set the status code to \f(CW500\fR meaning \f(CW\*(C`Internal Server Error\*(C'\fR.
+Takes a Mojo::Exception object and will fall back to a rendering a static
+\&\f(CW500\fR page using MojoX::Renderer::Static.
 .ie n .SS """render_inner"""
 .el .SS "\f(CWrender_inner\fP"
 .IX Subsection "render_inner"
@@ -206,6 +245,9 @@ ones.
 \&    my $output = $c\->render_inner(\*(Aqcontent\*(Aq);
 \&    my $output = $c\->render_inner(content => \*(AqHello world!\*(Aq);
 .Ve
+.PP
+Contains partial rendered templates, used for the renderers \f(CW\*(C`layout\*(C'\fR and
+\&\f(CW\*(C`extends\*(C'\fR features.
 .ie n .SS """render_json"""
 .el .SS "\f(CWrender_json\fP"
 .IX Subsection "render_json"
@@ -213,12 +255,18 @@ ones.
 \&    $c\->render_json({foo => \*(Aqbar\*(Aq});
 \&    $c\->render_json([1, 2, \-3]);
 .Ve
+.PP
+Render a data structure as \s-1JSON\s0.
 .ie n .SS """render_not_found"""
 .el .SS "\f(CWrender_not_found\fP"
 .IX Subsection "render_not_found"
 .Vb 1
 \&    $c\->render_not_found;
 .Ve
+.PP
+Render the not found template \f(CW\*(C`not_found.html.$handler\*(C'\fR.
+Also sets the response status code to \f(CW404\fR, will fall back to a rendering a
+static \f(CW404\fR page using MojoX::Renderer::Static.
 .ie n .SS """render_partial"""
 .el .SS "\f(CWrender_partial\fP"
 .IX Subsection "render_partial"
@@ -226,12 +274,16 @@ ones.
 \&    my $output = $c\->render_partial;
 \&    my $output = $c\->render_partial(action => \*(Aqfoo\*(Aq);
 .Ve
+.PP
+Same as \f(CW\*(C`render\*(C'\fR but returns the rendered result.
 .ie n .SS """render_static"""
 .el .SS "\f(CWrender_static\fP"
 .IX Subsection "render_static"
 .Vb 1
 \&    $c\->render_static(\*(Aqimages/logo.png\*(Aq);
 .Ve
+.PP
+Render a static asset using MojoX::Dispatcher::Static.
 .ie n .SS """render_text"""
 .el .SS "\f(CWrender_text\fP"
 .IX Subsection "render_text"
@@ -239,12 +291,17 @@ ones.
 \&    $c\->render_text(\*(AqHello World!\*(Aq);
 \&    $c\->render_text(\*(AqHello World\*(Aq, layout => \*(Aqgreen\*(Aq);
 .Ve
+.PP
+Render the givent content as plain text.
 .ie n .SS """resume"""
 .el .SS "\f(CWresume\fP"
 .IX Subsection "resume"
 .Vb 1
 \&    $c\->resume;
 .Ve
+.PP
+Resume transaction associated with this request, used for asynchronous web
+applications.
 .ie n .SS """url_for"""
 .el .SS "\f(CWurl_for\fP"
 .IX Subsection "url_for"
@@ -253,3 +310,5 @@ ones.
 \&    my $url = $c\->url_for(controller => \*(Aqbar\*(Aq, action => \*(Aqbaz\*(Aq);
 \&    my $url = $c\->url_for(\*(Aqnamed\*(Aq, controller => \*(Aqbar\*(Aq, action => \*(Aqbaz\*(Aq);
 .Ve
+.PP
+Generate a Mojo::URL for the current or a named route.

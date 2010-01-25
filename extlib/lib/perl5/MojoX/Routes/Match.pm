@@ -72,23 +72,8 @@ sub url_for {
 
     # Named
     if ($name) {
-
-        # Find endpoint
-        my $found    = 0;
-        my @children = ($self->root);
-        while (my $child = shift @children) {
-
-            # Match
-            if (($child->name || '') eq $name) {
-                $endpoint = $child;
-                $found++;
-                last;
-            }
-
-            # Append
-            push @children, @{$child->children};
-        }
-        croak qq/Route "$name" used in url_for does not exist/ unless $found;
+        croak qq/Route "$name" used in url_for does not exist/
+          unless $endpoint = $self->root->find_route($name);
     }
 
     # Merge values

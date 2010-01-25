@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Test::Mojo 3"
-.TH Test::Mojo 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Test::Mojo 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -163,6 +163,13 @@ Test::Mojo implements the following attributes.
 .Vb 2
 \&    my $app = $t\->app;
 \&    $t      = $t\->app(MyApp\->new);
+.Ve
+.ie n .SS """client"""
+.el .SS "\f(CWclient\fP"
+.IX Subsection "client"
+.Vb 2
+\&    my $client = $t\->client;
+\&    $t         = $t\->client(Mojo::Client\->new);
 .Ve
 .ie n .SS """redirects"""
 .el .SS "\f(CWredirects\fP"

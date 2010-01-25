@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo::Message 3"
-.TH Mojo::Message 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo::Message 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -193,6 +193,20 @@ implements the following new ones.
 .Vb 2
 \&    my $major_version = $message\->major_version;
 \&    $message          = $message\->major_version(1);
+.Ve
+.ie n .SS """max_line_size"""
+.el .SS "\f(CWmax_line_size\fP"
+.IX Subsection "max_line_size"
+.Vb 2
+\&    my $max_line_size = $message\->max_line_size;
+\&    $message          = $message\->max_line_size(500);
+.Ve
+.ie n .SS """max_message_size"""
+.el .SS "\f(CWmax_message_size\fP"
+.IX Subsection "max_message_size"
+.Vb 2
+\&    my $max_message_size = $message\->max_message_size;
+\&    $message             = $message\->max_message_size(50000);
 .Ve
 .ie n .SS """minor_version"""
 .el .SS "\f(CWminor_version\fP"

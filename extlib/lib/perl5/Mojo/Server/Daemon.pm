@@ -14,7 +14,8 @@ use File::Spec;
 use IO::File;
 use Mojo::IOLoop;
 use Mojo::Transaction::Pipeline;
-use Scalar::Util qw/isweak weaken/;
+use Mojo::Transaction::WebSocket;
+use Scalar::Util 'weaken';
 use Sys::Hostname 'hostname';
 
 __PACKAGE__->attr([qw/group listen listen_queue_size user/]);
@@ -36,7 +37,21 @@ __PACKAGE__->attr(
 );
 
 __PACKAGE__->attr(_connections => sub { {} });
+__PACKAGE__->attr(_listening   => sub { [] });
 __PACKAGE__->attr('_lock');
+
+sub DESTROY {
+    my $self = shift;
+
+    # Shortcut
+    return unless $self->ioloop;
+
+    # Cleanup connections
+    for my $id (keys %{$self->_connections}) { $self->ioloop->drop($id) }
+
+    # Cleanup listen sockets
+    for my $id (@{$self->_listening}) { $self->ioloop->drop($id) }
+}
 
 sub accept_lock {
     my ($self, $blocking) = @_;
@@ -59,15 +74,15 @@ sub prepare_ioloop {
     # Unlock callback
     $self->ioloop->unlock_cb(sub { $self->accept_unlock });
 
+    # Stop ioloop on HUP signal
+    $SIG{HUP} = sub { $self->ioloop->stop };
+
     # Listen
     my $listen = $self->listen || 'http://*:3000';
     $self->_listen($_) for split ',', $listen;
 
     # Max clients
     $self->ioloop->max_connections($self->max_clients);
-
-    # Stop ioloop on HUP signal
-    $SIG{HUP} = sub { $self->ioloop->stop };
 }
 
 sub prepare_lock_file {
@@ -200,7 +215,7 @@ sub _create_pipeline {
             if ($p->is_finished) {
 
                 # Close connection
-                if (!$conn->{pipeline}->keep_alive) {
+                if (!$conn->{pipeline}->keep_alive && !$conn->{websocket}) {
                     $self->_drop($id);
                     $self->ioloop->finish($id);
                 }
@@ -232,9 +247,7 @@ sub _create_pipeline {
             # Handler callback
             $tx->handler_cb(
                 sub {
-
-                    # Weaken
-                    weaken $tx unless isweak $tx;
+                    my $tx = shift;
 
                     # Handler
                     $self->handler_cb->($self, $tx);
@@ -244,12 +257,42 @@ sub _create_pipeline {
             # Continue handler callback
             $tx->continue_handler_cb(
                 sub {
-
-                    # Weaken
-                    weaken $tx;
+                    my $tx = shift;
 
                     # Continue handler
                     $self->continue_handler_cb->($self, $tx);
+                }
+            );
+
+            # Upgrade callback
+            $tx->upgrade_cb(
+                sub {
+                    my $tx = shift;
+
+                    # WebSocket?
+                    return unless $tx->req->headers->upgrade =~ /WebSocket/i;
+
+                    # WebSocket handshake handler
+                    my $ws = $conn->{websocket} =
+                      $self->websocket_handshake_cb->($self, $tx);
+
+                    # State change callback
+                    $ws->state_cb(
+                        sub {
+                            my $ws = shift;
+
+                            # Finish
+                            if ($ws->is_finished) {
+                                $self->_drop($id);
+                                $self->ioloop->finish($id);
+                            }
+
+                            # Writing?
+                            $ws->server_is_writing
+                              ? $self->ioloop->writing($id)
+                              : $self->ioloop->not_writing($id);
+                        }
+                    );
                 }
             );
 
@@ -333,7 +376,8 @@ sub _listen {
     };
 
     # Listen
-    $self->ioloop->listen($options);
+    my $id = $self->ioloop->listen($options);
+    push @{$self->_listening}, $id;
 
     # Log
     my $file    = $options->{file};
@@ -350,26 +394,36 @@ sub _listen {
 sub _read {
     my ($self, $loop, $id, $chunk) = @_;
 
-    # Pipeline
-    my $p = $self->_connections->{$id}->{pipeline}
-      ||= $self->_create_pipeline($id);
+    # Pipeline?
+    my $tx = $self->_connections->{$id}->{pipeline};
+
+    # WebSocket
+    $tx ||= $self->_connections->{$id}->{websocket};
+
+    # Create pipeline
+    $tx = $self->_connections->{$id}->{pipeline} =
+      $self->_create_pipeline($id)
+      unless $tx;
 
     # Read
-    $p->server_read($chunk);
+    $tx->server_read($chunk);
+
+    # WebSocket?
+    return if $tx->is_websocket;
 
     # State machine
-    $p->server_spin;
+    $tx->server_spin;
 
     # Add transactions to the pipe for leftovers
-    if (my $leftovers = $p->server_leftovers) {
+    if (my $leftovers = $tx->server_leftovers) {
 
         # Read leftovers
-        $p->server_read($leftovers);
+        $tx->server_read($leftovers);
     }
 
     # Last keep alive request?
-    $p->server_tx->res->headers->connection('Close')
-      if $p->server_tx
+    $tx->server_tx->res->headers->connection('Close')
+      if $tx->server_tx
           && $self->_connections->{$id}->{requests}
           >= $self->max_keep_alive_requests;
 }
@@ -378,13 +432,22 @@ sub _write {
     my ($self, $loop, $id) = @_;
 
     # Pipeline
-    return unless my $p = $self->_connections->{$id}->{pipeline};
+    my $tx = $self->_connections->{$id}->{pipeline};
+
+    # WebSocket
+    $tx ||= $self->_connections->{$id}->{websocket};
+
+    # No transaction
+    return unless $tx;
 
     # Get chunk
-    my $chunk = $p->server_get_chunk;
+    my $chunk = $tx->server_get_chunk;
+
+    # WebSocket?
+    return $chunk if $tx->is_websocket;
 
     # State machine
-    $p->server_spin;
+    $tx->server_spin;
 
     return $chunk;
 }
@@ -401,7 +464,7 @@ Mojo::Server::Daemon - HTTP Server
     use Mojo::Server::Daemon;
 
     my $daemon = Mojo::Server::Daemon->new;
-    $daemon->port(8080);
+    $daemon->listen('http://*:8080');
     $daemon->run;
 
 =head1 DESCRIPTION

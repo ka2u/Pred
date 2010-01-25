@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo::Server 3"
-.TH Mojo::Server 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo::Server 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -200,6 +200,15 @@ Mojo::Server implements the following attributes.
 .Vb 2
 \&    my $reload = $server\->reload;
 \&    $server    = $server\->reload(1);
+.Ve
+.ie n .SS """websocket_handshake_cb"""
+.el .SS "\f(CWwebsocket_handshake_cb\fP"
+.IX Subsection "websocket_handshake_cb"
+.Vb 4
+\&    my $handshake = $server\->websocket_handshake_cb;
+\&    $server       = $server\->websocket_handshake_cb(sub {
+\&        my ($self, $tx) = @_;
+\&    });
 .Ve
 .SH "METHODS"
 .IX Header "METHODS"

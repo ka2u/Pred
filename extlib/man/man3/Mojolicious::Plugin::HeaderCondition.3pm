@@ -123,59 +123,42 @@
 .rm #[ #] #H #V #F C
 .\" ========================================================================
 .\"
-.IX Title "Mojo::Asset 3"
-.TH Mojo::Asset 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
+.IX Title "Mojolicious::Plugin::HeaderCondition 3"
+.TH Mojolicious::Plugin::HeaderCondition 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-Mojo::Asset \- Asset Base Class
+Mojolicious::Plugin::HeaderCondition \- Header Condition Plugin
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-.Vb 1
-\&    use base \*(AqMojo::Asset\*(Aq;
+.Vb 2
+\&    # Mojolicious
+\&    $self\->plugin(\*(Aqheader_condition\*(Aq);
+\&
+\&    # Must match all of these headers
+\&    $self\->routes\->route(\*(Aq/:controller/:action\*(Aq)\->over(headers => {
+\&        X\-Secret\-Header => \*(AqFoo\*(Aq,
+\&        Referer => qr/^https?:\e/\e/example\e.com\e//
+\&    })\->to(\*(Aqfoo#bar\*(Aq);
+\&
+\&    # Mojolicious::Lite
+\&    plugin \*(Aqheader_condition\*(Aq;
+\&    get \*(Aq/\*(Aq => (headers => {\*(AqReferer\*(Aq => qr/^https?:\e/\e/example\e.com\e//})
+\&      => sub {...};
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-Mojo::Asset is an abstract base class for assets.
+Mojolicous::Plugin::HeaderCondition is a routes condition for header based
+routes.
 .SH "METHODS"
 .IX Header "METHODS"
-Mojo::Asset inherits all methods from Mojo::Base and implements the
-following new ones.
-.ie n .SS """add_chunk"""
-.el .SS "\f(CWadd_chunk\fP"
-.IX Subsection "add_chunk"
+Mojolicious::Plugin::HeaderCondition inherits all methods from
+Mojolicious::Plugin and implements the following new ones.
+.ie n .SS """register"""
+.el .SS "\f(CWregister\fP"
+.IX Subsection "register"
 .Vb 1
-\&    $asset = $asset\->add_chunk(\*(Aqfoo bar baz\*(Aq);
-.Ve
-.ie n .SS """contains"""
-.el .SS "\f(CWcontains\fP"
-.IX Subsection "contains"
-.Vb 1
-\&    my $position = $asset\->contains(\*(Aqbar\*(Aq);
-.Ve
-.ie n .SS """get_chunk"""
-.el .SS "\f(CWget_chunk\fP"
-.IX Subsection "get_chunk"
-.Vb 1
-\&    my $chunk = $asset\->get_chunk($offset);
-.Ve
-.ie n .SS """move_to"""
-.el .SS "\f(CWmove_to\fP"
-.IX Subsection "move_to"
-.Vb 1
-\&    $asset = $asset\->move_to(\*(Aq/foo/bar/baz.txt\*(Aq);
-.Ve
-.ie n .SS """size"""
-.el .SS "\f(CWsize\fP"
-.IX Subsection "size"
-.Vb 1
-\&    my $size = $asset\->size;
-.Ve
-.ie n .SS """slurp"""
-.el .SS "\f(CWslurp\fP"
-.IX Subsection "slurp"
-.Vb 1
-\&    my $string = $file\->slurp;
+\&    $plugin\->register;
 .Ve

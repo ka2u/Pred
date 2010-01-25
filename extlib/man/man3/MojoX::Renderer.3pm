@@ -124,13 +124,13 @@
 .\" ========================================================================
 .\"
 .IX Title "MojoX::Renderer 3"
-.TH MojoX::Renderer 3 "2010-01-19" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH MojoX::Renderer 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-MojoX::Renderer \- Renderer
+MojoX::Renderer \- MIME Type Based Renderer
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 .Vb 1
@@ -140,7 +140,8 @@ MojoX::Renderer \- Renderer
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-MojoX::Renderer is a \s-1MIME\s0 type based renderer.
+MojoX::Renderer is the standard Mojolicious renderer.
+It turns your stashed data structures into content.
 .SS "\s-1ATTRIBUTES\s0"
 .IX Subsection "ATTRIBUTES"
 MojoX::Types implements the follwing attributes.
@@ -151,6 +152,9 @@ MojoX::Types implements the follwing attributes.
 \&    my $default = $renderer\->default_format;
 \&    $renderer   = $renderer\->default_format(\*(Aqhtml\*(Aq);
 .Ve
+.PP
+The default format to render if \f(CW\*(C`format\*(C'\fR is not set in the stash.
+The renderer will use MojoX::Types to look up the content \s-1MIME\s0 type.
 .ie n .SS """default_handler"""
 .el .SS "\f(CWdefault_handler\fP"
 .IX Subsection "default_handler"
@@ -158,6 +162,15 @@ MojoX::Types implements the follwing attributes.
 \&    my $default = $renderer\->default_handler;
 \&    $renderer   = $renderer\->default_handler(\*(Aqepl\*(Aq);
 .Ve
+.PP
+The default template handler to use for rendering.
+There are two handlers in this distribution.
+.IP "epl" 4
+.IX Item "epl"
+\&\f(CW\*(C`Embedded Perl Lite\*(C'\fR handled by Mojolicious::Plugin::EplRenderer.
+.IP "ep" 4
+.IX Item "ep"
+\&\f(CW\*(C`Embedded Perl\*(C'\fR handled by Mojolicious::Plugin::EpRenderer.
 .ie n .SS """default_status"""
 .el .SS "\f(CWdefault_status\fP"
 .IX Subsection "default_status"
@@ -165,6 +178,8 @@ MojoX::Types implements the follwing attributes.
 \&    my $default = $renderer\->default_status;
 \&    $renderer   = $renderer\->default_status(404);
 .Ve
+.PP
+The default status to set when rendering content, defaults to \f(CW200\fR.
 .ie n .SS """default_template_class"""
 .el .SS "\f(CWdefault_template_class\fP"
 .IX Subsection "default_template_class"
@@ -172,6 +187,9 @@ MojoX::Types implements the follwing attributes.
 \&    my $default = $renderer\->default_template_class;
 \&    $renderer   = $renderer\->default_template_class(\*(Aqmain\*(Aq);
 .Ve
+.PP
+The renderer will use this class to look for templates in the \f(CW\*(C`_\|_DATA_\|_\*(C'\fR
+section.
 .ie n .SS """encoding"""
 .el .SS "\f(CWencoding\fP"
 .IX Subsection "encoding"
@@ -179,6 +197,8 @@ MojoX::Types implements the follwing attributes.
 \&    my $encoding = $renderer\->encoding;
 \&    $renderer    = $renderer\->encoding(\*(Aqkoi8\-r\*(Aq);
 .Ve
+.PP
+Will encode the content if set.
 .ie n .SS """handler"""
 .el .SS "\f(CWhandler\fP"
 .IX Subsection "handler"
@@ -186,6 +206,8 @@ MojoX::Types implements the follwing attributes.
 \&    my $handler = $renderer\->handler;
 \&    $renderer   = $renderer\->handler({epl => sub { ... }});
 .Ve
+.PP
+Registered handlers.
 .ie n .SS """helper"""
 .el .SS "\f(CWhelper\fP"
 .IX Subsection "helper"
@@ -193,6 +215,8 @@ MojoX::Types implements the follwing attributes.
 \&    my $helper = $renderer\->helper;
 \&    $renderer  = $renderer\->helper({url_for => sub { ... }});
 .Ve
+.PP
+Registered helpers.
 .ie n .SS """layout_prefix"""
 .el .SS "\f(CWlayout_prefix\fP"
 .IX Subsection "layout_prefix"
@@ -200,6 +224,8 @@ MojoX::Types implements the follwing attributes.
 \&    my $prefix = $renderer\->layout_prefix;
 \&    $renderer  = $renderer\->layout_prefix(\*(Aqlayouts\*(Aq);
 .Ve
+.PP
+Directory to look for layouts in, defaults to \f(CW\*(C`layouts\*(C'\fR.
 .ie n .SS """root"""
 .el .SS "\f(CWroot\fP"
 .IX Subsection "root"
@@ -207,6 +233,8 @@ MojoX::Types implements the follwing attributes.
 \&   my $root  = $renderer\->root;
 \&   $renderer = $renderer\->root(\*(Aq/foo/bar/templates\*(Aq);
 .Ve
+.PP
+Directory to look for templates in.
 .ie n .SS """types"""
 .el .SS "\f(CWtypes\fP"
 .IX Subsection "types"
@@ -214,9 +242,11 @@ MojoX::Types implements the follwing attributes.
 \&    my $types = $renderer\->types;
 \&    $renderer = $renderer\->types(MojoX::Types\->new);
 .Ve
+.PP
+MojoX::Types object to use for looking up \s-1MIME\s0 types.
 .SH "METHODS"
 .IX Header "METHODS"
-MojoX::Types inherits all methods from Mojo::Base and implements the
+MojoX::Renderer inherits all methods from Mojo::Base and implements the
 follwing the ones.
 .ie n .SS """new"""
 .el .SS "\f(CWnew\fP"
@@ -224,50 +254,72 @@ follwing the ones.
 .Vb 1
 \&    my $renderer = MojoX::Renderer\->new;
 .Ve
+.PP
+Construct a new renderer.
 .ie n .SS """add_handler"""
 .el .SS "\f(CWadd_handler\fP"
 .IX Subsection "add_handler"
 .Vb 1
 \&    $renderer = $renderer\->add_handler(epl => sub { ... });
 .Ve
+.PP
+Add a new handler to the renderer.
+See Mojolicious::Plugin::EpRenderer for a sample renderer.
 .ie n .SS """add_helper"""
 .el .SS "\f(CWadd_helper\fP"
 .IX Subsection "add_helper"
 .Vb 1
 \&    $renderer = $renderer\->add_helper(url_for => sub { ... });
 .Ve
+.PP
+Add a new helper to the renderer.
+See Mojolicious::Plugin::EpRenderer for sample helpers.
 .ie n .SS """get_inline_template"""
 .el .SS "\f(CWget_inline_template\fP"
 .IX Subsection "get_inline_template"
 .Vb 1
 \&    my $template = $renderer\->get_inline_template($c, \*(Aqfoo.html.ep\*(Aq);
 .Ve
+.PP
+Get an inline template by name, usually used by handlers.
 .ie n .SS """render"""
 .el .SS "\f(CWrender\fP"
 .IX Subsection "render"
 .Vb 1
-\&    my $success  = $renderer\->render($c);
+\&    my $success = $renderer\->render($c);
 \&
 \&    $c\->stash\->{partial} = 1;
 \&    my $output = $renderer\->render($c);
 .Ve
+.PP
+Render output through one of the Mojo renderers.
+This renderer requires some configuration, at the very least you will need to
+have a default \f(CW\*(C`format\*(C'\fR and a default \f(CW\*(C`handler\*(C'\fR as well as a \f(CW\*(C`template\*(C'\fR or
+\&\f(CW\*(C`text\*(C'\fR/\f(CW\*(C`json\*(C'\fR.
+See Mojolicious::Controller for a more user friendly interface.
 .ie n .SS """template_name"""
 .el .SS "\f(CWtemplate_name\fP"
 .IX Subsection "template_name"
 .Vb 5
-\&    my $template = $renderer\->template_path({
+\&    my $template = $renderer\->template_name({
 \&        template => \*(Aqfoo/bar\*(Aq,
 \&        format   => \*(Aqhtml\*(Aq,
 \&        handler  => \*(Aqepl\*(Aq
 \&    });
 .Ve
+.PP
+Builds a template name based on an options hash with \f(CW\*(C`template\*(C'\fR, \f(CW\*(C`format\*(C'\fR
+and \f(CW\*(C`handler\*(C'\fR.
 .ie n .SS """template_path"""
 .el .SS "\f(CWtemplate_path\fP"
 .IX Subsection "template_path"
 .Vb 5
-\&    my $path = $renderer\->template_name({
+\&    my $path = $renderer\->template_path({
 \&        template => \*(Aqfoo/bar\*(Aq,
 \&        format   => \*(Aqhtml\*(Aq,
 \&        handler  => \*(Aqepl\*(Aq
 \&    });
 .Ve
+.PP
+Builds a full template path based on an options hash with \f(CW\*(C`template\*(C'\fR,
+\&\f(CW\*(C`format\*(C'\fR and \f(CW\*(C`handler\*(C'\fR.

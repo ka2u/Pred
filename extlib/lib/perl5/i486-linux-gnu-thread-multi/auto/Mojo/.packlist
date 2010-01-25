@@ -56,6 +56,7 @@
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojo/Transaction.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojo/Transaction/Pipeline.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojo/Transaction/Single.pm
+/home/kaz/dev/work/Pred/extlib/lib/perl5/Mojo/Transaction/WebSocket.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojo/URL.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojo/Upload.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/MojoX/Dispatcher/Routes.pm
@@ -68,6 +69,7 @@
 /home/kaz/dev/work/Pred/extlib/lib/perl5/MojoX/Types.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Book.pod
+/home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Book/CodingGuidelines.pod
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Command/Generate.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Command/Generate/App.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Command/Generate/LiteApp.pm
@@ -81,6 +83,7 @@
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Plugin/DefaultHelpers.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Plugin/EpRenderer.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Plugin/EplRenderer.pm
+/home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Plugin/HeaderCondition.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Plugin/JsonConfig.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Plugin/PoweredBy.pm
 /home/kaz/dev/work/Pred/extlib/lib/perl5/Mojolicious/Plugin/RequestTimer.pm
@@ -143,6 +146,7 @@
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojo::Transaction.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojo::Transaction::Pipeline.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojo::Transaction::Single.3pm
+/home/kaz/dev/work/Pred/extlib/man/man3/Mojo::Transaction::WebSocket.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojo::URL.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojo::Upload.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/MojoX::Dispatcher::Routes.3pm
@@ -155,6 +159,7 @@
 /home/kaz/dev/work/Pred/extlib/man/man3/MojoX::Types.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Book.3pm
+/home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Book::CodingGuidelines.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Command::Generate.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Command::Generate::App.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Command::Generate::LiteApp.3pm
@@ -168,6 +173,7 @@
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Plugin::DefaultHelpers.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Plugin::EpRenderer.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Plugin::EplRenderer.3pm
+/home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Plugin::HeaderCondition.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Plugin::JsonConfig.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Plugin::PoweredBy.3pm
 /home/kaz/dev/work/Pred/extlib/man/man3/Mojolicious::Plugin::RequestTimer.3pm
