@@ -1,3 +1,8 @@
 % layout 'loadfoo';
 <h1>Registered account</h1>
-OK
+Added new account
+<pre>
+id: <%== $name %>
+e_mail: <%== $e_mail %>
+</pre>
+<a href="/top/login">Login</a>

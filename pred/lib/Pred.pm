@@ -11,9 +11,11 @@ use base 'Mojolicious';
 #use Pred::DB::Task;
 #use Pred::DB::HaveProject;
 use Pred::DB;
+use Pred::Util;
 
 # schema
 __PACKAGE__->attr(db => sub { Pred::DB->new });
+__PACKAGE__->attr(util => sub { Pred::Util->new });
 #__PACKAGE__->attr(user => sub { Pred::DB::User->new });
 #__PACKAGE__->attr(project => sub { Pred::DB::Project->new });
 #__PACKAGE__->attr(story => sub { Pred::DB::Story->new });
