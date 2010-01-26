@@ -1,4 +1,10 @@
 % layout 'loadfoo';
-<h1>Pred is Predication of Software Develpment Projects</h1>
-<a href="/signup/new">Signup</a>
-<a href="/top/login">Login</a>
+<h1>Login</h1>
+<form action="login">
+<table>
+<tr><td>ID: </td><td><input type="text" name="id"></td></tr>
+<tr><td>PASSWORD: </td><td><input type="password" name="password"></td></tr>
+</table>
+<input type="submit" value="submit">
+</form>
+<a href="/signup/newuser">signup</a>
