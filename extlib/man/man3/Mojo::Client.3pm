@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo::Client 3"
-.TH Mojo::Client 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo::Client 3 "2010-01-27" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -139,8 +139,8 @@ Mojo::Client \- Client
 \&    my $client = Mojo::Client\->new;
 \&    $client\->get(
 \&        \*(Aqhttp://kraih.com\*(Aq => sub {
-\&            my ($self, $tx) = @_;
-\&            print $tx\->res\->code;
+\&            my $self = shift;
+\&            print $self\->res\->code;
 \&        }
 \&    )\->process;
 .Ve
@@ -264,6 +264,14 @@ Note that IO::Socket::SSL must be installed for \s-1HTTPS\s0 support.
 Callback to verify your \s-1TLS\s0 connection, by default the client will accept
 most certificates.
 Note that IO::Socket::SSL must be installed for \s-1HTTPS\s0 support.
+.ie n .SS """tx"""
+.el .SS "\f(CWtx\fP"
+.IX Subsection "tx"
+.Vb 1
+\&    $client\->tx;
+.Ve
+.PP
+The last finished transaction, only available from callbacks.
 .SH "METHODS"
 .IX Header "METHODS"
 Mojo::Client inherits all methods from Mojo::Base and implements the
@@ -283,18 +291,26 @@ As usual, you can pass any of the attributes above to the constructor.
 .Vb 4
 \&    $client = $client\->delete(\*(Aqhttp://kraih.com\*(Aq => sub {...});
 \&    $client = $client\->delete(
-\&      \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
+\&        \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
 \&    );
 .Ve
 .PP
 Send a \s-1HTTP\s0 \f(CW\*(C`DELETE\*(C'\fR request.
+.ie n .SS """finish"""
+.el .SS "\f(CWfinish\fP"
+.IX Subsection "finish"
+.Vb 1
+\&    $client\->finish;
+.Ve
+.PP
+Finish the WebSocket connection, only available from callbacks.
 .ie n .SS """get"""
 .el .SS "\f(CWget\fP"
 .IX Subsection "get"
 .Vb 4
 \&    $client = $client\->get(\*(Aqhttp://kraih.com\*(Aq => sub {...});
 \&    $client = $client\->get(
-\&      \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
+\&        \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
 \&    );
 .Ve
 .PP
@@ -305,7 +321,7 @@ Send a \s-1HTTP\s0 \f(CW\*(C`GET\*(C'\fR request.
 .Vb 4
 \&    $client = $client\->head(\*(Aqhttp://kraih.com\*(Aq => sub {...});
 \&    $client = $client\->head(
-\&      \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
+\&        \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
 \&    );
 .Ve
 .PP
@@ -316,7 +332,7 @@ Send a \s-1HTTP\s0 \f(CW\*(C`HEAD\*(C'\fR request.
 .Vb 4
 \&    $client = $client\->post(\*(Aqhttp://kraih.com\*(Aq => sub {...});
 \&    $client = $client\->post(
-\&      \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
+\&        \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
 \&    );
 .Ve
 .PP
@@ -365,7 +381,7 @@ Will be blocking unless you have a global shared ioloop.
 .Vb 4
 \&    $client = $client\->put(\*(Aqhttp://kraih.com\*(Aq => sub {...});
 \&    $client = $client\->put(
-\&      \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
+\&        \*(Aqhttp://kraih.com\*(Aq => (Connection => \*(Aqclose\*(Aq) => sub {...}
 \&    );
 .Ve
 .PP
@@ -379,3 +395,54 @@ Send a \s-1HTTP\s0 \f(CW\*(C`PUT\*(C'\fR request.
 .Ve
 .PP
 Queue a list of transactions for processing.
+.ie n .SS """receive_message"""
+.el .SS "\f(CWreceive_message\fP"
+.IX Subsection "receive_message"
+.Vb 1
+\&    $client\->receive_message(sub {...});
+.Ve
+.PP
+Receive messages via WebSocket, only available from callbacks.
+.PP
+.Vb 3
+\&    $client\->receive_message(sub {
+\&        my ($self, $message) = @_;
+\&    });
+.Ve
+.ie n .SS """req"""
+.el .SS "\f(CWreq\fP"
+.IX Subsection "req"
+.Vb 1
+\&    my $req = $client\->req;
+.Ve
+.PP
+The request object of the last finished transaction, only available from
+callbacks.
+.ie n .SS """res"""
+.el .SS "\f(CWres\fP"
+.IX Subsection "res"
+.Vb 1
+\&    my $res = $client\->res;
+.Ve
+.PP
+The response object of the last finished transaction, only available from
+callbacks.
+.ie n .SS """send_message"""
+.el .SS "\f(CWsend_message\fP"
+.IX Subsection "send_message"
+.Vb 1
+\&    $client\->send_message(\*(AqHi there!\*(Aq);
+.Ve
+.PP
+Send a message via WebSocket, only available from callbacks.
+.ie n .SS """websocket"""
+.el .SS "\f(CWwebsocket\fP"
+.IX Subsection "websocket"
+.Vb 4
+\&    $client = $client\->websocket(\*(Aqws://localhost:3000\*(Aq => sub {...});
+\&    $client = $client\->websocket(
+\&        \*(Aqws://localhost:3000\*(Aq => (\*(AqUser\-Agent\*(Aq => \*(AqAgent 1.0\*(Aq) => sub {...}
+\&    );
+.Ve
+.PP
+Open a WebSocket connection with transparent handshake.

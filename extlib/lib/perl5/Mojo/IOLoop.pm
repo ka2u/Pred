@@ -143,13 +143,15 @@ sub drop {
     if ($self->_timers->{$id}) {
         my $c = $self->_timers->{$id}->{connection};
 
-        # Cleanup connection
-        my @timers;
-        for my $timer (@{$self->_connections->{$c}->{timers}}) {
-            next if $timer eq $id;
-            push @timers, $timer;
+        # Cleanup connection only if it exists
+        if ($self->_connections->{$c}) {
+            my @timers;
+            for my $timer (@{$self->_connections->{$c}->{timers}}) {
+                next if $timer eq $id;
+                push @timers, $timer;
+            }
+            $self->_connections->{$c}->{timers} = \@timers;
         }
-        $self->_connections->{$c}->{timers} = \@timers;
 
         delete $self->_timers->{$id};
         return $self;
@@ -646,7 +648,7 @@ sub _read {
     my $read = $c->{socket}->sysread(my $buffer, CHUNK_SIZE, 0);
 
     # Read error
-    return $self->_error($id)
+    return $self->_error($id, $!)
       unless defined $read && defined $buffer && length $buffer;
 
     # Callback
@@ -723,7 +725,7 @@ sub _spin {
         $epoll->poll($self->timeout);
 
         # Error
-        $self->_error("$_") for $epoll->handles(IO::Epoll::POLLERR());
+        $self->_error("$_", $!) for $epoll->handles(IO::Epoll::POLLERR());
 
         # HUP
         $self->_hup("$_") for $epoll->handles(IO::Epoll::POLLHUP());
@@ -741,7 +743,7 @@ sub _spin {
         $poll->poll($self->timeout);
 
         # Error
-        $self->_error("$_") for $poll->handles(POLLERR);
+        $self->_error("$_", $!) for $poll->handles(POLLERR);
 
         # HUP
         $self->_hup("$_") for $poll->handles(POLLHUP);
@@ -825,7 +827,7 @@ sub _write {
     my $written = $c->{socket}->syswrite($chunk, length $chunk);
 
     # Write error
-    return $self->_error($id) unless defined $written;
+    return $self->_error($id, $!) unless defined $written;
 
     # Remove written chunk from buffer
     $buffer->remove($written);
@@ -1120,6 +1122,8 @@ Stop the loop immediately.
     my $id = $loop->timer($id => {interval => 5, cb => sub {...}}));
 
 Create a new timer, invoking the callback afer a given amount of seconds.
+Note that timers are bound to connections and will get destroyed together
+with them.
 
 =head2 C<write_cb>
 

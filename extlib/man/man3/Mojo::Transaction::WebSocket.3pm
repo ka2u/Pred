@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo::Transaction::WebSocket 3"
-.TH Mojo::Transaction::WebSocket 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo::Transaction::WebSocket 3 "2010-01-27" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -143,6 +143,15 @@ Mojo::Transaction::WebSocket is a container for WebSocket transactions.
 .IX Header "ATTRIBUTES"
 Mojo::Transaction::WebSocket inherits all attributes from
 Mojo::Transaction and implements the following new ones.
+.ie n .SS """handshake"""
+.el .SS "\f(CWhandshake\fP"
+.IX Subsection "handshake"
+.Vb 2
+\&    my $handshake = $ws\->handshake;
+\&    $ws           = $ws\->handshake(Mojo::Transaction::Single\->new);
+.Ve
+.PP
+The original handshake transaction.
 .ie n .SS """read_buffer"""
 .el .SS "\f(CWread_buffer\fP"
 .IX Subsection "read_buffer"
@@ -167,15 +176,6 @@ The callback that receives decoded messages one by one.
 \&        my ($self, $message) = @_;
 \&    });
 .Ve
-.ie n .SS """req"""
-.el .SS "\f(CWreq\fP"
-.IX Subsection "req"
-.Vb 2
-\&    my $req = $ws\->req;
-\&    $ws     = $ws\->req(Mojo::Message::Request\->new);
-.Ve
-.PP
-The original handshake request.
 .ie n .SS """write_buffer"""
 .el .SS "\f(CWwrite_buffer\fP"
 .IX Subsection "write_buffer"
@@ -189,6 +189,30 @@ Buffer for outgoing data.
 .IX Header "METHODS"
 Mojo::Transaction::WebSocket inherits all methods from
 Mojo::Transaction and implements the following new ones.
+.ie n .SS """client_get_chunk"""
+.el .SS "\f(CWclient_get_chunk\fP"
+.IX Subsection "client_get_chunk"
+.Vb 1
+\&    my $chunk = $ws\->client_get_chunk;
+.Ve
+.PP
+Raw WebSocket data to write, only used by clients.
+.ie n .SS """client_read"""
+.el .SS "\f(CWclient_read\fP"
+.IX Subsection "client_read"
+.Vb 1
+\&    $ws\->client_read($data);
+.Ve
+.PP
+Read raw WebSocket data, only used by clients.
+.ie n .SS """connection"""
+.el .SS "\f(CWconnection\fP"
+.IX Subsection "connection"
+.Vb 1
+\&    my $connection = $ws\->connection;
+.Ve
+.PP
+The connection this websocket is using.
 .ie n .SS """finish"""
 .el .SS "\f(CWfinish\fP"
 .IX Subsection "finish"
@@ -197,6 +221,54 @@ Mojo::Transaction and implements the following new ones.
 .Ve
 .PP
 Finish the WebSocket connection gracefully.
+.ie n .SS """local_address"""
+.el .SS "\f(CWlocal_address\fP"
+.IX Subsection "local_address"
+.Vb 1
+\&    my $local_address = $tx\->local_address;
+.Ve
+.PP
+The local address of this WebSocket.
+.ie n .SS """local_port"""
+.el .SS "\f(CWlocal_port\fP"
+.IX Subsection "local_port"
+.Vb 1
+\&    my $local_port = $tx\->local_port;
+.Ve
+.PP
+The local port of this WebSocket.
+.ie n .SS """remote_address"""
+.el .SS "\f(CWremote_address\fP"
+.IX Subsection "remote_address"
+.Vb 1
+\&    my $remote_address = $tx\->remote_address;
+.Ve
+.PP
+The remote address of this WebSocket.
+.ie n .SS """remote_port"""
+.el .SS "\f(CWremote_port\fP"
+.IX Subsection "remote_port"
+.Vb 1
+\&    my $remote_port = $tx\->remote_port;
+.Ve
+.PP
+The remote port of this WebSocket.
+.ie n .SS """req"""
+.el .SS "\f(CWreq\fP"
+.IX Subsection "req"
+.Vb 1
+\&    my $req = $ws\->req;
+.Ve
+.PP
+The original handshake request.
+.ie n .SS """res"""
+.el .SS "\f(CWres\fP"
+.IX Subsection "res"
+.Vb 1
+\&    my $req = $ws\->res;
+.Ve
+.PP
+The original handshake response.
 .ie n .SS """send_message"""
 .el .SS "\f(CWsend_message\fP"
 .IX Subsection "send_message"

@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojolicious::Controller 3"
-.TH Mojolicious::Controller 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojolicious::Controller 3 "2010-01-27" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -169,6 +169,7 @@ A Mojo::Client prepared for the current environment.
 Similar to \f(CW\*(C`resume\*(C'\fR but will also trigger automatic rendering and the
 \&\f(CW\*(C`after_dispatch\*(C'\fR plugin hook, which would normally get disabled once a
 request gets paused.
+For WebSockets it will gracefully end the connection.
 .ie n .SS """helper"""
 .el .SS "\f(CWhelper\fP"
 .IX Subsection "helper"
@@ -192,6 +193,21 @@ applications.
 Note that automatic rendering and some plugins that do state changing
 operations inside the \f(CW\*(C`after_dispatch\*(C'\fR hook won't work if you pause a
 transaction.
+.ie n .SS """receive_message"""
+.el .SS "\f(CWreceive_message\fP"
+.IX Subsection "receive_message"
+.Vb 1
+\&    $c\->receive_message(sub {...});
+.Ve
+.PP
+Receive messages via WebSocket, only works if there is currently a WebSocket
+connection in progress.
+.PP
+.Vb 3
+\&    $c\->receive_message(sub {
+\&        my ($self, $message) = @_
+\&    });
+.Ve
 .ie n .SS """redirect_to"""
 .el .SS "\f(CWredirect_to\fP"
 .IX Subsection "redirect_to"
@@ -302,6 +318,15 @@ Render the givent content as plain text.
 .PP
 Resume transaction associated with this request, used for asynchronous web
 applications.
+.ie n .SS """send_message"""
+.el .SS "\f(CWsend_message\fP"
+.IX Subsection "send_message"
+.Vb 1
+\&    $c\->send_message(\*(AqHi there!\*(Aq);
+.Ve
+.PP
+Send a message via WebSocket, only works if there is currently a WebSocket
+connection in progress.
 .ie n .SS """url_for"""
 .el .SS "\f(CWurl_for\fP"
 .IX Subsection "url_for"

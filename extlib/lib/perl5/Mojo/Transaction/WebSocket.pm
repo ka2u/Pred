@@ -11,8 +11,9 @@ use base 'Mojo::Transaction';
 
 use Mojo::Buffer;
 use Mojo::ByteStream 'b';
-use Mojo::Message::Request;
+use Mojo::Transaction::Single;
 
+__PACKAGE__->attr(handshake => sub { Mojo::Transaction::Single->new });
 __PACKAGE__->attr([qw/read_buffer write_buffer/] => sub { Mojo::Buffer->new }
 );
 __PACKAGE__->attr(
@@ -20,9 +21,12 @@ __PACKAGE__->attr(
         sub { }
     }
 );
-__PACKAGE__->attr(req => sub { Mojo::Message::Request->new });
 
 __PACKAGE__->attr(_finished => 0);
+
+sub client_get_chunk { shift->server_get_chunk(@_) }
+sub client_read      { shift->server_read(@_) }
+sub connection       { shift->handshake->connection(@_) }
 
 sub finish {
     my $self = shift;
@@ -33,6 +37,13 @@ sub finish {
     # Finished
     $self->state('done');
 }
+
+sub local_address  { shift->handshake->local_address }
+sub local_port     { shift->handshake->local_port }
+sub remote_address { shift->handshake->remote_address }
+sub remote_port    { shift->handshake->remote_port }
+sub req            { shift->handshake->req(@_) }
+sub res            { shift->handshake->res(@_) }
 
 sub send_message {
     my ($self, $message) = @_;
@@ -104,6 +115,13 @@ L<Mojo::Transaction::WebSocket> is a container for WebSocket transactions.
 L<Mojo::Transaction::WebSocket> inherits all attributes from
 L<Mojo::Transaction> and implements the following new ones.
 
+=head2 C<handshake>
+
+    my $handshake = $ws->handshake;
+    $ws           = $ws->handshake(Mojo::Transaction::Single->new);
+
+The original handshake transaction.
+
 =head2 C<read_buffer>
 
     my $buffer = $ws->read_buffer;
@@ -122,13 +140,6 @@ The callback that receives decoded messages one by one.
         my ($self, $message) = @_;
     });
 
-=head2 C<req>
-
-    my $req = $ws->req;
-    $ws     = $ws->req(Mojo::Message::Request->new);
-
-The original handshake request.
-
 =head2 C<write_buffer>
 
     my $buffer = $ws->write_buffer;
@@ -141,11 +152,65 @@ Buffer for outgoing data.
 L<Mojo::Transaction::WebSocket> inherits all methods from
 L<Mojo::Transaction> and implements the following new ones.
 
+=head2 C<client_get_chunk>
+
+    my $chunk = $ws->client_get_chunk;
+
+Raw WebSocket data to write, only used by clients.
+
+=head2 C<client_read>
+
+    $ws->client_read($data);
+
+Read raw WebSocket data, only used by clients.
+
+=head2 C<connection>
+
+    my $connection = $ws->connection;
+
+The connection this websocket is using.
+
 =head2 C<finish>
 
     $ws->finish;
 
 Finish the WebSocket connection gracefully.
+
+=head2 C<local_address>
+
+    my $local_address = $tx->local_address;
+
+The local address of this WebSocket.
+
+=head2 C<local_port>
+
+    my $local_port = $tx->local_port;
+
+The local port of this WebSocket.
+
+=head2 C<remote_address>
+
+    my $remote_address = $tx->remote_address;
+
+The remote address of this WebSocket.
+
+=head2 C<remote_port>
+
+    my $remote_port = $tx->remote_port;
+
+The remote port of this WebSocket.
+
+=head2 C<req>
+
+    my $req = $ws->req;
+
+The original handshake request.
+
+=head2 C<res>
+
+    my $req = $ws->res;
+
+The original handshake response.
 
 =head2 C<send_message>
 

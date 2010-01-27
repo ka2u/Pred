@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Mojo::Exception 3"
-.TH Mojo::Exception 3 "2010-01-25" "perl v5.8.8" "User Contributed Perl Documentation"
+.TH Mojo::Exception 3 "2010-01-27" "perl v5.8.8" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -170,13 +170,6 @@ Mojo::Exception implements the following attributes.
 .Vb 2
 \&    my $message = $e\->message;
 \&    $e          = $e\->message(\*(AqOops!\*(Aq);
-.Ve
-.ie n .SS """stack"""
-.el .SS "\f(CWstack\fP"
-.IX Subsection "stack"
-.Vb 2
-\&    my $stack = $e\->stack;
-\&    $e        = $e\->stack([[\*(AqFoo::Bar\*(Aq, \*(Aq/foo/bar.pl\*(Aq, 23]]);
 .Ve
 .SH "METHODS"
 .IX Header "METHODS"

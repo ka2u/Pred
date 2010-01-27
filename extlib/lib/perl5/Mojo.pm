@@ -45,13 +45,14 @@ __PACKAGE__->attr(
             $res->headers->websocket_origin($tx->req->headers->origin);
 
             # WenSocket transaction
-            return Mojo::Transaction::WebSocket->new(req => $tx->req);
+            return Mojo::Transaction::WebSocket->new(handshake => $tx);
           }
     }
 );
 
 # Oh, so they have internet on computers now!
-our $VERSION = '0.999915';
+our $CODENAME = 'Snowman';
+our $VERSION  = '0.999920';
 
 sub new {
     my $self = shift->SUPER::new(@_);
@@ -224,7 +225,7 @@ Start the L<Mojo::Commands> command line interface for your application.
 
 =head2 Mailing-List
 
-    http://lists.kraih.com/listinfo/mojo
+    http://groups.google.com/group/mojolicious
 
 =head1 DEVELOPMENT
 
